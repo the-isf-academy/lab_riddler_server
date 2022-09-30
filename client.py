@@ -1,13 +1,6 @@
 import requests
 from simple_term_menu import TerminalMenu
 
-def menu(options):
-    '''This function creates an interactive Terminal menu.'''
-
-    terminal_menu = TerminalMenu(options) #Creates the Terminal Menu
-    option_num = terminal_menu.show() #Get user selected Option
-
-    return options[option_num]
 
 class RiddleClient():
 
@@ -22,6 +15,14 @@ class RiddleClient():
                 'Play Game',
                 'Quit']
     
+    def menu(self,options):
+        '''This function creates an interactive Terminal menu.'''
+
+        terminal_menu = TerminalMenu(options) #Creates the Terminal Menu
+        option_num = terminal_menu.show() #Get user selected Option
+
+        return options[option_num]
+
 
     def start(self):
         '''This function runs the client.'''
@@ -33,7 +34,7 @@ class RiddleClient():
         client_running = True
 
         while client_running == True:
-            user_choice = menu(self.menu_options)
+            user_choice = self.menu(self.menu_options)
 
             if user_choice == 'View All Riddles':
                 print('[View All Riddles]')
@@ -41,16 +42,26 @@ class RiddleClient():
 
             elif user_choice == 'View One Riddle':
                 print('[View One Riddle]')
-                self.view_one_riddle()
+
+                user_chosen_id = int(input('Enter Riddle ID: '))
+
+                self.view_one_riddle(user_chosen_id)
 
             elif user_choice == 'Guess a Riddle':
                 print('[Guess a Riddle]')
-                user_id = int(input('Enter Riddle ID: '))
+                user_chosen_id = int(input('Enter Riddle ID: '))
+
+                self.view_one_riddle(user_chosen_id)
+
+                print()
                 user_guess = input('Enter your guess: ')
 
-                self.guess_riddle(user_id, user_guess)
+                self.guess_riddle(user_chosen_id, user_guess)
 
             elif user_choice == 'New Riddle':
+                user_question = input('Enter a Riddle question: ')
+                user_answer = input('Enter the answer: ')
+
                 self.new_riddle()
 
             elif user_choice == 'Play Game':
@@ -67,6 +78,9 @@ class RiddleClient():
     
 
     def view_all_riddles(self):
+        '''This functions sends a GET request to riddles/all.
+        It gets all of the riddles and nicely formats them into a bulletted list.'''
+
         all_riddles_address = self.riddle_server + 'riddles/all'
 
         response = requests.get(all_riddles_address)
@@ -75,16 +89,18 @@ class RiddleClient():
             all_riddles_json = response.json()
             
             for riddle in all_riddles_json['riddles']:
-                print("  • {}".format(riddle['question']))
+                print("  • {} (#{})".format(riddle['question'], riddle['id']))
         else:
             print('Server {} Error. Try again...'.format(response.status_code))
 
-    def view_one_riddle(self):
+    def view_one_riddle(self, user_chosen_id):
+        '''This function sends a GET request to riddles/one.
+        It gets a single riddle with a specific ID and then formats it in a nice list.'''
+
         one_riddles_address = self.riddle_server + 'riddles/one'
 
-        user_id = int(input('Enter Riddle ID: '))
         one_riddle_payload = {
-            'id': user_id
+            'id': user_chosen_id
         }
 
         response = requests.get(one_riddles_address, json=one_riddle_payload)
@@ -98,11 +114,15 @@ class RiddleClient():
         else:
             print('Server {} Error. Try again...'.format(response.status_code))
 
-    def guess_riddle(self, user_id, user_guess):
+    def guess_riddle(self, user_chosen_id, user_guess):
+        '''This function sends a POST request to riddles/guess.
+        It sends the user chosen id and user inputted guess.
+        It then tells the user if the guess was correct or incorrect.'''
+
         guess_riddle_address = self.riddle_server + 'riddles/guess'
 
         guess_riddle_payload = {
-            'id': user_id,
+            'id': user_chosen_id,
             'guess': user_guess
         }
 
@@ -119,12 +139,12 @@ class RiddleClient():
         else:
             print('Server {} Error. Try again...'.format(response.status_code))
        
-    def new_riddle(self):
+    def new_riddle(self, user_question, user_answer):
+        '''This function sends a POST request to riddles/new.
+        It sends the user's questioin and the user's answer to add a new Riddle to the database.
+        It then nicely format's the user's new riddle into a bulleted list.'''
+
         new_riddle_address = self.riddle_server + 'riddles/new'
-
-        user_question = input('Enter a Riddle question: ')
-        user_answer = input('Enter the answer: ')
-
 
         new_riddle_payload = {
             'question': user_question,
@@ -149,8 +169,6 @@ class RiddleClient():
 
         response = requests.get(all_riddles_address)
 
-  
-
         if response.status_code == 200:
             all_riddles_json = response.json()
             
@@ -167,15 +185,8 @@ class RiddleClient():
 
 if __name__ == "__main__":
     network_server= "http://riddles.student.isf.edu.hk/"
-    local_server = "http://127.0.0.1:5000/"
 
-    server_options = ['Network Server','Local Server']
-    user_server_option = menu(server_options)
-
-    if user_server_option == 'Network Server':
-        client = RiddleClient(network_server)
-    elif user_server_option == 'Local Server':
-        client = RiddleClient(local_server)
+    client = RiddleClient(network_server)
 
     client.start()
 
