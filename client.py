@@ -12,13 +12,13 @@ class RiddleClient():
                 'View One Riddle',
                 'Quit']
     
-    def menu(self,options):
+    def menu(self):
         '''This function creates an interactive Terminal menu.'''
 
-        terminal_menu = TerminalMenu(options) #Creates the Terminal Menu
+        terminal_menu = TerminalMenu(self.menu_options) #Creates the Terminal Menu
         option_num = terminal_menu.show() #Get user selected Option
 
-        return options[option_num]
+        return self.menu_options[option_num]
 
 
     def start(self):
@@ -31,7 +31,7 @@ class RiddleClient():
         client_running = True
 
         while client_running == True:
-            user_choice = self.menu(self.menu_options)
+            user_choice = self.menu()
 
             if user_choice == 'View All Riddles':
                 print('[View All Riddles]')
@@ -57,7 +57,7 @@ class RiddleClient():
 
     def view_all_riddles(self):
         '''This functions sends a GET request to riddles/all.
-        It gets all of the riddles and nicely formats them into a bulletted list.'''
+        It gets all of the riddles and nicely formats them into a bulleted list.'''
 
         all_riddles_address = self.riddle_server + 'riddles/all'
 
