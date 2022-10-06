@@ -11,7 +11,7 @@ class RiddleClient():
                 'View All Riddles',
                 'View One Riddle',
                 'Quit']
-    
+
     def menu(self):
         '''This function creates an interactive Terminal menu.'''
 
@@ -41,9 +41,12 @@ class RiddleClient():
             elif user_choice == 'View One Riddle':
                 print('[View One Riddle]')
 
-                user_chosen_id = int(input('Enter Riddle ID: '))
-
-                self.view_one_riddle(user_chosen_id)
+                user_chosen_id = input('Enter Riddle ID: ')
+                if user_chosen_id.isdigit() == True:
+                    user_chosen_id = int(user_chosen_id)
+                    self.view_one_riddle(user_chosen_id)
+                else:
+                    print("That's not an integer! Please try again...")
 
             elif user_choice == 'Quit':
                 client_running = False
@@ -53,7 +56,7 @@ class RiddleClient():
 
             print()
 
-    
+
 
     def view_all_riddles(self):
         '''This functions sends a GET request to riddles/all.
@@ -65,7 +68,7 @@ class RiddleClient():
 
         if response.status_code == 200:
             all_riddles_json = response.json()
-            
+
             for riddle in all_riddles_json['riddles']:
                 print("  • {} (#{})".format(riddle['question'], riddle['id']))
         else:
@@ -92,7 +95,7 @@ class RiddleClient():
         else:
             print('Server {} Error. Try again...'.format(response.status_code))
 
-       
+
 
 
 
@@ -102,10 +105,3 @@ if __name__ == "__main__":
     client = RiddleClient(network_server)
 
     client.start()
-
-
-
-
-
-
-
