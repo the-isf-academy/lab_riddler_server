@@ -42,11 +42,8 @@ class RiddleClient():
                 print('[View One Riddle]')
 
                 user_chosen_id = input('Enter Riddle ID: ')
-                if user_chosen_id.isdigit() == True:
-                    user_chosen_id = int(user_chosen_id)
-                    self.view_one_riddle(user_chosen_id)
-                else:
-                    print("That's not an integer! Please try again...")
+                self.view_one_riddle(user_chosen_id)
+
 
             elif user_choice == 'Quit':
                 client_running = False
@@ -72,7 +69,9 @@ class RiddleClient():
             for riddle in all_riddles_json['riddles']:
                 print("  • {} (#{})".format(riddle['question'], riddle['id']))
         else:
+            error_json = response.json()
             print('Server {} Error. Try again...'.format(response.status_code))
+            print('-- {}'.format(error_json['errors'][0]))
 
     def view_one_riddle(self, user_chosen_id):
         '''This function sends a GET request to riddles/one.
@@ -93,7 +92,9 @@ class RiddleClient():
                 print("  • {}: {}".format(key,value))
 
         else:
+            error_json = response.json()
             print('Server {} Error. Try again...'.format(response.status_code))
+            print('-- {}'.format(error_json['errors'][0]))
 
 
 
