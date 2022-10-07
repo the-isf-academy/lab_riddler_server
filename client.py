@@ -21,7 +21,7 @@ class RiddleClient():
         return self.menu_options[option_num]
 
 
-    def start(self):
+    def run(self):
         '''This function runs the client.'''
 
         print("-"*35)
@@ -105,4 +105,4 @@ if __name__ == "__main__":
 
     client = RiddleClient(network_server)
 
-    client.start()
+    client.run()
