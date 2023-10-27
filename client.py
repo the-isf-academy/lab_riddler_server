@@ -1,108 +1,29 @@
-import requests
-from simple_term_menu import TerminalMenu
+from requests_interface import RequestsInterface
+from view import View
 
+client_running = True
+requests_interface = RequestsInterface()
+view = View()
 
-class RiddleClient():
+while client_running == True:
 
-    def __init__(self, server_address):
-        self.riddle_server = server_address
-
-        self.menu_options = [
+    user_choice = view.menu(
+        prompt = "Menu:",
+        options = [
                 'View All Riddles',
                 'View One Riddle',
                 'Quit']
+                )
 
-    def menu(self):
-        '''This function creates an interactive Terminal menu.'''
+    if user_choice == 'View All Riddles':
+        requests_interface.view_all_riddles()
 
-        terminal_menu = TerminalMenu(self.menu_options) #Creates the Terminal Menu
-        option_num = terminal_menu.show() #Get user selected Option
-
-        return self.menu_options[option_num]
-
-
-    def run(self):
-        '''This function runs the client.'''
-
-        print("-"*35)
-        print("---- Welcome to the Riddler ----")
-        print("-"*35,"\n")
-
-        client_running = True
-
-        while client_running == True:
-            user_choice = self.menu()
-
-            if user_choice == 'View All Riddles':
-                print('[View All Riddles]')
-
-                self.view_all_riddles()
-
-            elif user_choice == 'View One Riddle':
-                print('[View One Riddle]')
-
-                user_chosen_id = input('Enter Riddle ID: ')
-                self.view_one_riddle(user_chosen_id)
+    elif user_choice == 'View One Riddle':
+        user_chosen_id =  view.get_input('Enter Riddle ID')
+        requests_interface.view_one_riddle(user_chosen_id)
 
 
-            elif user_choice == 'Quit':
-                client_running = False
-
-                print("="*75)
-
-
-            print()
-
-
-
-    def view_all_riddles(self):
-        '''This functions sends a GET request to riddles/all.
-        It gets all of the riddles and nicely formats them into a bulleted list.'''
-
-        all_riddles_address = self.riddle_server + 'riddles/all'
-
-        response = requests.get(all_riddles_address)
-
-        if response.status_code == 200:
-            all_riddles_json = response.json()
-
-            for riddle in all_riddles_json['riddles']:
-                print("  • {} (#{})".format(riddle['question'], riddle['id']))
-        else:
-            error_json = response.json()
-            print('Server {} Error. Try again...'.format(response.status_code))
-            print('-- {}'.format(error_json['errors'][0]))
-
-    def view_one_riddle(self, user_chosen_id):
-        '''This function sends a GET request to riddles/one.
-        It gets a single riddle with a specific ID and then formats it in a nice list.'''
-
-        one_riddles_address = self.riddle_server + 'riddles/one'
-
-        one_riddle_payload = {
-            'id': user_chosen_id
-        }
-
-        response = requests.get(one_riddles_address, json=one_riddle_payload)
-
-        if response.status_code == 200:
-            one_riddle_json = response.json()
-
-            for key, value in one_riddle_json.items():
-                print("  • {}: {}".format(key,value))
-
-        else:
-            error_json = response.json()
-            print('Server {} Error. Try again...'.format(response.status_code))
-            print('-- {}'.format(error_json['errors'][0]))
-
-
-
-
-
-if __name__ == "__main__":
-    network_server= "http://riddles.student.isf.edu.hk/"
-
-    client = RiddleClient(network_server)
-
-    client.run()
+    elif user_choice == 'Quit':
+        client_running = False
+        view.quit()
+  
