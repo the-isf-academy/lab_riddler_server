@@ -8,8 +8,7 @@ class RequestsInterface():
         self.view = View()
 
     def all_riddles(self):
-        '''This functions sends a GET request to riddles/all.
-        It gets all of the riddles and nicely formats them into a bulleted list.'''
+        '''This functions sends a GET request to riddles/all.'''
 
 
         all_riddles_address = self.riddle_server + 'all'
