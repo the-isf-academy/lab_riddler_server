@@ -1,3 +1,5 @@
+# view.py - controls input and ouput to terminal
+
 from InquirerPy import inquirer, get_style        
 
 

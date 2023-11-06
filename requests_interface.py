@@ -1,3 +1,5 @@
+# requests_interface.py - controls HTTP requests to Riddle API 
+
 import requests
 from view import View
 

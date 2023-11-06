@@ -1,3 +1,5 @@
+# client.py - controls user interaction logic
+
 from requests_interface import RequestsInterface
 from view import View
 
