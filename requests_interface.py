@@ -10,7 +10,6 @@ class RequestsInterface():
     def all_riddles(self):
         '''This functions sends a GET request to riddles/all.'''
 
-
         all_riddles_address = self.riddle_server + 'all'
 
         response = requests.get(all_riddles_address)
