@@ -24,33 +24,8 @@ class RequestsInterface():
             self.error(response)
 
 
-    def one_riddle(self, user_chosen_id):
-        '''This function sends a GET request to riddles/one.
-        It gets a single riddle with a specific ID and then formats it in a nice list.'''
-
-        one_riddles_address = self.riddle_server + 'one'
-
-        payload = {
-            'id': user_chosen_id
-        }
-
-        response = requests.get(one_riddles_address, json=one_riddle_payload)
-
-        if response.status_code == 200:
-            one_riddle_json = response.json()
-
-            if 'error' not in one_riddle_json:
-                self.view.one_riddle(one_riddle_json['riddle'])
-
-            else:
-                self.error_json(one_riddle_json)
-
-        else:
-            self.error_no_json(response)
-
     def guess_riddle(self, user_chosen_id, user_guess):
-        '''This function sends a GET request to riddles/one.
-        It gets a single riddle with a specific ID and then formats it in a nice list.'''
+        '''This function sends a POST request to riddles/guess.'''
 
         guess_riddles_address = self.riddle_server + 'guess'
 
@@ -62,13 +37,13 @@ class RequestsInterface():
         response = requests.post(guess_riddles_address, json=payload)
 
         if response.status_code == 200:
-            one_riddle_json = response.json()
+            guess_riddle_json = response.json()
 
-            if 'error' not in one_riddle_json:
-                self.view.one_riddle(one_riddle_json['riddle'])
+            if 'error' not in guess_riddle_json:
+                self.view.guess_riddle(guess_riddle_json['riddle'])
 
             else:
-                self.error_json(one_riddle_json)
+                self.error_json(guess_riddle_json)
 
         else:
             self.error_no_json(response)

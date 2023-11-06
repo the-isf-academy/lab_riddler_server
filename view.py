@@ -37,11 +37,16 @@ class View:
         for riddle in all_riddles:
                 print(f"  • {riddle['question']} (#{riddle['id']})")
 
-    def one_riddle(self, one_riddle):
-        print('\n[View One Riddle]')
+    def guess_riddle(self, guess_riddle_json):
+        print('\n[Guess Riddle]')
 
-        for key, value in one_riddle.items():
-            print(f"  • {key}: {value}")
+        if guess_riddle_json['correct'] == True:
+            print("Correct!!")
+        else:
+            print("Incorrect :(")
+
+        for key,val in guess_riddle_json.items():
+            print(f"  • {key}: {val}")
 
     def error_json(self, error_message):
         print(f'\n[Error: {error_message}]')

@@ -13,17 +13,18 @@ while client_running == True:
         prompt = "Menu:",
         options = [
                 'View All Riddles',
-                'View One Riddle',
-                'Guess A Riddle',
+                'Guess Riddle',
                 'Quit']
                 )
 
     if user_choice == 'View All Riddles':
         requests_interface.all_riddles()
 
-    elif user_choice == 'View One Riddle':
+    elif user_choice == 'Guess Riddle':
         user_chosen_id =  view.get_input('Enter Riddle ID')
-        requests_interface.one_riddle(user_chosen_id)
+        user_guess=  view.get_input('Enter guess')
+
+        requests_interface.guess_riddle(user_chosen_id, user_guess)
 
 
     elif user_choice == 'Quit':
