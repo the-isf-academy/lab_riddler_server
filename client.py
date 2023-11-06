@@ -5,6 +5,8 @@ client_running = True
 requests_interface = RequestsInterface()
 view = View()
 
+view.welcome()
+
 while client_running == True:
 
     user_choice = view.menu(
@@ -12,15 +14,16 @@ while client_running == True:
         options = [
                 'View All Riddles',
                 'View One Riddle',
+                'Guess A Riddle',
                 'Quit']
                 )
 
     if user_choice == 'View All Riddles':
-        requests_interface.view_all_riddles()
+        requests_interface.all_riddles()
 
     elif user_choice == 'View One Riddle':
         user_chosen_id =  view.get_input('Enter Riddle ID')
-        requests_interface.view_one_riddle(user_chosen_id)
+        requests_interface.one_riddle(user_chosen_id)
 
 
     elif user_choice == 'Quit':

@@ -47,7 +47,7 @@ class View:
         print(f'\n[Error: {error_message}]')
 
         
-    def error_status_code(self, status_code):
+    def error_no_json(self, status_code):
         print(f'\n[Error: HTTP {status_code}]')
 
     def quit(self):
