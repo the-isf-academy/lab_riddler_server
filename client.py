@@ -114,12 +114,6 @@ class RiddleGUI:
 
             self.submit_buttons[title] = (button)
 
-    def display_text_box(self, row_num, height):
-        self.text_box.grid(row=row_num, column=0, padx=20, pady=20, sticky="ew", columnspan=5)
-        self.text_box.configure(height = height) 
-        self.text_box.configure(state='disabled') # sets to read-only
-
-
     def view_all_riddles(self):
         '''Controls how the user views all riddles'''
 
@@ -134,10 +128,7 @@ class RiddleGUI:
             self.text_box.insert('end', f"\n\n")
 
         self.display_text_box(row_num=1, height=500)
-   
-   
     
-
     def guess_riddle_submit(self):
         '''Controls when the user clicks submit 
         for guess a riddle'''
@@ -194,6 +185,11 @@ class RiddleGUI:
         self.text_box.insert('end',f"{message}")    # adds message to text box
         
         self.display_text_box(row_num=4, height=50)
+
+    def display_text_box(self, row_num, height):
+        self.text_box.grid(row=row_num, column=0, padx=20, pady=20, sticky="ew", columnspan=5)
+        self.text_box.configure(height = height) 
+        self.text_box.configure(state='disabled') # sets to read-only
 
     def reset_textbox(self):
         '''Remove all text from textbox'''
