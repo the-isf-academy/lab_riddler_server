@@ -9,10 +9,10 @@ class RiddleGUI:
 
         # Create and Setup the application window 
         self.app = customtkinter.CTk()
-        self.app.geometry("600x600")
+        self.app.geometry("800x600")
         self.app.title("Riddler Client")
         
-        # columns use space available
+        # each column uses equal spacing
         self.app.grid_columnconfigure((0,1,2,3), weight=1)
 
         # setup menu  buttons
@@ -45,9 +45,9 @@ class RiddleGUI:
 
         menu_dictionary = {
             'view all': self.view_all_riddles,
-            'guess': self.guess_riddle_entry,
-            'one': self.view_one_riddle_entry,
-            'new': self.new_riddle_entry,
+            'guess': lambda: self.config_entry_widget(['id','guess'],'guess'),
+            'one': lambda: self.config_entry_widget(['id'],'view_one'),
+            'new': lambda: self.config_entry_widget(['question','answer'],'new'),
             'clear': self.clear,
         }
 
@@ -61,6 +61,7 @@ class RiddleGUI:
             self.menu_buttons.append(button)
 
             button.grid(row=0, column=self.menu_buttons.index(button), padx=20, pady=20, sticky="ew")
+            
 
     def setup_entry_widgets(self):
         '''Creates entry widgets'''
@@ -118,6 +119,7 @@ class RiddleGUI:
         self.text_box.configure(height = height) 
         self.text_box.configure(state='disabled') # sets to read-only
 
+
     def view_all_riddles(self):
         '''Controls how the user views all riddles'''
 
@@ -133,22 +135,7 @@ class RiddleGUI:
 
         self.display_text_box(row_num=1, height=500)
    
-    def guess_riddle_entry(self):
-        '''Controls user input for the guess entry boxes'''
-
-        self.clear()
-
-        # Bind the entry boxes to key entry
-        self.setup_entry_bind(['id','guess'], 'guess')
-
-        # Place entry boxes and labels on grid
-        self.labels['id'].grid(row=1, column=0, padx=0, pady=0)
-        self.entry_widgets['id'].grid(row=1, column=1, pady=0, padx=20,sticky="ew", columnspan=2)
-        self.labels['guess'].grid(row=2, column=0, pady=10)
-        self.entry_widgets['guess'].grid(row=2, column=1, padx=20,sticky="ew", columnspan=2)
-
-        # Place submit button on grid
-        self.submit_buttons['guess'].grid(row=3, column=1, padx=20, pady=10,sticky="ew")
+   
     
 
     def guess_riddle_submit(self):
@@ -173,22 +160,6 @@ class RiddleGUI:
         
         self.display_text_box(row_num=4, height=50)
 
-    
-
-    def view_one_riddle_entry(self):
-        '''Controls user input for the guess entry boxes'''
-
-        self.clear()
-
-        # Bind the entry box to key entry
-        self.setup_entry_bind(['id'], 'view_one')
-
-        # Place entry boxes and labels on grid
-        self.labels['id'].grid(row=1, column=0, padx=0, pady=0)
-        self.entry_widgets['id'].grid(row=1, column=1, pady=0, padx=20,sticky="ew", columnspan=2)
-
-        # Place submit button on grid
-        self.submit_buttons['view_one'].grid(row=3, column=1, padx=20, pady=10,sticky="ew")
 
     def view_one_riddle_submit(self):
         '''Controls when the user clicks submit 
@@ -201,23 +172,6 @@ class RiddleGUI:
         self.text_box.insert('end',f"{one_riddle_json}")    
 
         self.display_text_box(row_num=4, height=200)
-
-    def new_riddle_entry(self):
-        '''Controls user input for the guess entry boxes'''
-
-        self.clear()
-
-        # Bind the entry boxes to key entry
-        self.setup_entry_bind(['question','answer'], 'new')
-
-        # Place entry boxes and labels on grid
-        self.labels['question'].grid(row=1, column=0, padx=0, pady=0)
-        self.entry_widgets['question'].grid(row=1, column=1, pady=0, padx=20,sticky="ew", columnspan=2)
-        self.labels['answer'].grid(row=2, column=0, pady=10)
-        self.entry_widgets['answer'].grid(row=2, column=1, padx=20,sticky="ew", columnspan=2)
-
-        # Place submit button on grid
-        self.submit_buttons['new'].grid(row=3, column=1, padx=20, pady=10,sticky="ew")
 
     def new_riddle_submit(self):
         '''Controls when the user clicks submit 
@@ -264,7 +218,24 @@ class RiddleGUI:
         for title,button in self.submit_buttons.items():
             button.grid_forget()
 
+    def config_entry_widget(self,widget_list, submit_button):
+        self.clear()
+
+        # Bind the entry boxes to key entry
+        self.setup_entry_bind(widget_list, submit_button)
+
+        row_num = 1
+        for widget in widget_list:
+            self.labels[widget].grid(row=row_num, column=0, padx=0, pady=0)
+            self.entry_widgets[widget].grid(row=row_num, column=1, pady=0, padx=20,sticky="ew", columnspan=2)
+            row_num += 1
+      
+        # Place submit button on grid
+        self.submit_buttons[submit_button].grid(row=3, column=1, padx=20, pady=10,sticky="ew")
+
     def setup_entry_bind(self, widget_list, submit_button):
+        '''Binds widgets to typing in the entry box'''
+
         for widget in widget_list:
             self.entry_widgets[widget].bind(
                 '<KeyRelease>', 
