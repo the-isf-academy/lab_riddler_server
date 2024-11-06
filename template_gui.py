@@ -1,17 +1,41 @@
 from tkinter import font
 import customtkinter
-from riddle_interface import RiddlerInterface
+from api_client import RiddlerInterface
 
-class RiddleGUI:
+class GUI:
     def __init__(self):
 
         self.riddler_interface = RiddlerInterface()
 
+        # map menu button titles to their corresponding methods
+        self.menu_dictionary = {
+            'button text': self.clear,
+        }
+
+        self.entry_dictionary = {
+            'test': "TEST"
+        }
+
+        self.label_dictionary = {
+            'example_label': "Example Label"
+        }
+
+        self.submit_button_dictionary = {
+            'guess': self.guess_riddle_submit,
+            'view_one': self.view_one_riddle_submit,
+            'new': self.new_riddle_submit
+        }
+
+    def setup_application_window(self):
         # Create and Setup the application window 
         self.app = customtkinter.CTk()
         self.app.geometry("800x600")
         self.app.title("Riddler Client")
-        
+
+    def all_setup(self):
+        # Create and Setup the application window 
+        self.setup_application_window()
+
         # each column uses equal spacing
         self.app.grid_columnconfigure((0,1,2,3), weight=1)
 
@@ -38,20 +62,11 @@ class RiddleGUI:
         # setup submit buttons
         self.submit_buttons = {}
         self.setup_submit_buttons()
-        
 
     def setup_menu_buttons(self):
         '''Creates menu buttons'''
 
-        menu_dictionary = {
-            'view all': self.view_all_riddles,
-            'guess': lambda: self.config_entry_widget(['id','guess'],'guess'),
-            'one': lambda: self.config_entry_widget(['id'],'view_one'),
-            'new': lambda: self.config_entry_widget(['question','answer'],'new'),
-            'clear': self.clear,
-        }
-
-        for title, method in menu_dictionary.items():
+        for title, method in self.menu_dictionary.items():
             button = customtkinter.CTkButton(
                 self.app, 
                 text = title , 
@@ -66,14 +81,7 @@ class RiddleGUI:
     def setup_entry_widgets(self):
         '''Creates entry widgets'''
         
-        entry_dictionary = {
-            'id': "Riddle ID",
-            'guess': "Guess",
-            'question': "Riddle Question",
-            'answer': "Riddle Answer"
-        }
-
-        for label, text in entry_dictionary.items():
+        for label, text in self.entry_dictionary.items():
             self.entry_widgets[label] = customtkinter.CTkEntry(
                 self.app,
                 placeholder_text = text)
@@ -81,14 +89,7 @@ class RiddleGUI:
     def setup_labels(self):
         '''Creates labels for entry widgets'''
 
-        label_dictionary = {
-            'id': "Enter Riddle ID",
-            'guess': "Enter Riddle Guess",
-            'question': "Enter Riddle Question",
-            'answer': "Enter Riddle Answer",
-        }
-
-        for label, text in label_dictionary.items():
+        for label, text in self.label_dictionary.items():
             self.labels[label] = customtkinter.CTkLabel(
                 self.app, 
                 text = text, 
@@ -98,13 +99,7 @@ class RiddleGUI:
     def setup_submit_buttons(self):
         '''Create submit buttons for entry widgets'''
 
-        submit_button_dictionary = {
-            'guess': self.guess_riddle_submit,
-            'view_one': self.view_one_riddle_submit,
-            'new': self.new_riddle_submit
-        }
-
-        for title, method in submit_button_dictionary.items():
+        for title, method in self.submit_button_dictionary.items():
             button = customtkinter.CTkButton(
                 self.app, 
                 text = 'Submit', 
@@ -252,7 +247,6 @@ class RiddleGUI:
             self.submit_buttons[submit_button].configure(state="normal")
 
     def run(self):
+        self.all_setup()
         self.app.mainloop()
    
-gui = RiddleGUI()
-gui.run()
