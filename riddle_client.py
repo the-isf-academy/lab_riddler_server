@@ -2,7 +2,7 @@
 
 import requests
 
-class RiddlerClient():
+class RiddleClient():
 
     def __init__(self):
         self.riddle_server = 'http://sycs.student.isf.edu.hk/riddle/'
@@ -46,49 +46,3 @@ class RiddlerClient():
         else:
             return f"HTTP error {response.status_code}"
         
-    def one_riddle(self, user_chosen_id):
-        '''This function sends a POST request to riddles/one.'''
-
-        one_riddle_address = self.riddle_server + 'one'
-
-        payload = {
-            'id': user_chosen_id,
-        }
-
-        response = requests.get(one_riddle_address, json=payload)
-
-        if response.status_code == 200:
-            one_riddle_json = response.json()
-
-            if 'riddle' in one_riddle_json:
-                return one_riddle_json['riddle']
-
-            else:
-                return one_riddle_json
-
-        else:
-            return f"HTTP error {response.status_code}"
-        
-    def new_riddle(self, new_question, new_answer):
-        '''This function sends a POST request to riddles/guess.'''
-
-        new_riddles_address = self.riddle_server + 'new'
-
-        payload = {
-            'question': new_question,
-            'answer': new_answer
-        }
-
-        response = requests.post(new_riddles_address, json=payload)
-
-        if response.status_code == 200:
-            new_riddle_json = response.json()
-
-            if 'riddle' in new_riddle_json:
-                return "Successfully added riddle"
-
-            else:
-                return "Error adding riddle"
-
-        else:
-            return f"HTTP error {response.status_code}"

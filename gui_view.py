@@ -1,13 +1,14 @@
-from riddle_client import RiddlerClient
-from template_gui import GUI
+from riddle_client import RiddleClient
+from gui_template import GUI
+import customtkinter
 
 class RiddlerGUI(GUI):
     def __init__(self):
         # inherit all the properties and methods from the parent class
-        super().__init__()
+        super().__init__(app_title="Riddler",width=800, height=600)
 
         # create the riddler client object
-        self.riddler_client = RiddlerClient()
+        self.riddler_client = RiddleClient()
         
         # maps each entry_widget to its placeholder text
         self.entry_dictionary = {
@@ -27,19 +28,27 @@ class RiddlerGUI(GUI):
 
         # maps each submit button with the method it triggers
         self.submit_button_dictionary = {
-            'guess_submit': self.guess_riddle_submit,
-            'view_one_submit': self.view_one_riddle_submit,
-            'new_submit': self.new_riddle_submit
+            'guess_submit': lambda: self.guess_riddle_submit(),
+            'view_one_submit': lambda: self.view_one_riddle_submit(),
+            'new_submit': lambda: self.new_riddle_submit()
         }
 
         # map each menu button to its entry_widgets and submit button
         self.menu_dictionary = {
-            '👀 View All': self.view_all_riddles,
+            '👀 View All': lambda: self.view_all_riddles(),
             '¿ Guess ?': lambda: self.config_entry_widget(['id_widget','guess_widget'],'guess_submit'),
             '👀 View One': lambda: self.config_entry_widget(['id_widget'],'view_one_submit'),
             '✨ Make New': lambda: self.config_entry_widget(['question_widget','answer_widget'],'new_submit'),
-            '⌫ Clear': self.clear,
+            '⌫ Clear': lambda: self.clear(),
         }
+
+        # creates a text box
+        self.text_box = customtkinter.CTkTextbox(
+            self.app,
+            font=customtkinter.CTkFont(size=16),
+            text_color="black",  
+            corner_radius=10, 
+        )
 
     def view_all_riddles(self):
         '''Controls how the user views all riddles'''
@@ -62,9 +71,11 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        guess_riddle_json = self.riddler_client.guess_riddle(
-            self.entry_widgets['id_widget'].get(), 
-            self.entry_widgets['guess_widget'].get())
+        # store input from entry widgets in variables
+        id = self.entry_widgets['id_widget'].get()
+        guess =self.entry_widgets['guess_widget'].get()
+
+        guess_riddle_json = self.riddler_client.guess_riddle(id,guess) 
 
         if 'correct' in guess_riddle_json:
             if guess_riddle_json['correct'] == True:
@@ -85,7 +96,9 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        one_riddle_json = self.riddler_client.one_riddle(self.entry_widgets['id_widget'].get())
+        id = self.entry_widgets['id_widget'].get()
+
+        one_riddle_json = self.riddler_client.one_riddle(id)
 
         self.text_box.insert('end',f"{one_riddle_json}")    
 
@@ -97,9 +110,10 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        new_riddle_json = self.riddler_client.new_riddle(
-            self.entry_widgets['question_widget'].get(), 
-            self.entry_widgets['answer_widget'].get())
+        question = self.entry_widgets['question_widget'].get()
+        answer = self.entry_widgets['answer_widget'].get()
+
+        new_riddle_json = self.riddler_client.new_riddle(question, answer)
 
         if 'correct' in new_riddle_json:
             if new_riddle_json['correct'] == True:
