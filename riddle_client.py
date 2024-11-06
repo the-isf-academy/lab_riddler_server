@@ -1,8 +1,8 @@
-# requests_interface.py - controls HTTP requests to Riddle API 
+# riddle_client.py - controls HTTP requests to Riddle API 
 
 import requests
 
-class RiddlerInterface():
+class RiddlerClient():
 
     def __init__(self):
         self.riddle_server = 'http://sycs.student.isf.edu.hk/riddle/'

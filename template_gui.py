@@ -1,29 +1,27 @@
 from tkinter import font
 import customtkinter
-from api_client import RiddlerInterface
+# from riddle_client import RiddlerClient
 
 class GUI:
     def __init__(self):
 
-        self.riddler_interface = RiddlerInterface()
-
-        # map menu button titles to their corresponding methods
-        self.menu_dictionary = {
-            'button text': self.clear,
-        }
-
+        # create the riddler client object
+        # self.riddler_client = RiddlerClient()
+        
+        # maps each entry_widget to its placeholder text
         self.entry_dictionary = {
-            'test': "TEST"
         }
 
+        # map each entry_widget to its label
         self.label_dictionary = {
-            'example_label': "Example Label"
         }
 
+        # maps each submit button with the method it triggers
         self.submit_button_dictionary = {
-            'guess': self.guess_riddle_submit,
-            'view_one': self.view_one_riddle_submit,
-            'new': self.new_riddle_submit
+        }
+
+        # map each menu button to its entry_widgets and submit button
+        self.menu_dictionary = {
         }
 
     def setup_application_window(self):
@@ -108,79 +106,7 @@ class GUI:
                 state='disabled')
 
             self.submit_buttons[title] = (button)
-
-    def view_all_riddles(self):
-        '''Controls how the user views all riddles'''
-
-        self.clear()
-
-        all_riddles_json = self.riddler_interface.all_riddles()
-        
-        # loops through each riddle
-        for riddle_dict in all_riddles_json:
-            # adds riddle id and question to the text box
-            self.text_box.insert('end', f"{riddle_dict['id']}# {riddle_dict['question']}")
-            self.text_box.insert('end', f"\n\n")
-
-        self.display_text_box(row_num=1, height=500)
     
-    def guess_riddle_submit(self):
-        '''Controls when the user clicks submit 
-        for guess a riddle'''
-
-        self.reset_textbox()
-
-        guess_riddle_json = self.riddler_interface.guess_riddle(
-            self.entry_widgets['id'].get(), 
-            self.entry_widgets['guess'].get())
-
-        if 'correct' in guess_riddle_json:
-            if guess_riddle_json['correct'] == True:
-                message = 'Correct!!'
-            else:
-                message = 'Incorrect'
-        else:
-            message = guess_riddle_json
-
-        self.text_box.insert('end',f"{message}")    # adds message to text box
-        
-        self.display_text_box(row_num=4, height=50)
-
-
-    def view_one_riddle_submit(self):
-        '''Controls when the user clicks submit 
-        for guess a riddle'''
-
-        self.reset_textbox()
-
-        one_riddle_json = self.riddler_interface.one_riddle(self.entry_widgets['id'].get())
-
-        self.text_box.insert('end',f"{one_riddle_json}")    
-
-        self.display_text_box(row_num=4, height=200)
-
-    def new_riddle_submit(self):
-        '''Controls when the user clicks submit 
-        for guess a riddle'''
-
-        self.reset_textbox()
-
-        new_riddle_json = self.riddler_interface.new_riddle(
-            self.entry_widgets['question'].get(), 
-            self.entry_widgets['answer'].get())
-
-        if 'correct' in new_riddle_json:
-            if new_riddle_json['correct'] == True:
-                message = 'Correct!!'
-            else:
-                message = 'Incorrect'
-        else:
-            message = new_riddle_json
-
-        self.text_box.insert('end',f"{message}")    # adds message to text box
-        
-        self.display_text_box(row_num=4, height=50)
-
     def display_text_box(self, row_num, height):
         self.text_box.grid(row=row_num, column=0, padx=20, pady=20, sticky="ew", columnspan=5)
         self.text_box.configure(height = height) 
@@ -249,4 +175,79 @@ class GUI:
     def run(self):
         self.all_setup()
         self.app.mainloop()
-   
+  
+    # TO BE DELETED PROBABLY ⬇️
+
+    # def view_all_riddles(self):
+    #     '''Controls how the user views all riddles'''
+
+    #     self.clear()
+
+    #     all_riddles_json = self.riddler_client.all_riddles()
+        
+    #     # loops through each riddle
+    #     for riddle_dict in all_riddles_json:
+    #         # adds riddle id and question to the text box
+    #         self.text_box.insert('end', f"{riddle_dict['id']}# {riddle_dict['question']}")
+    #         self.text_box.insert('end', f"\n\n")
+
+    #     self.display_text_box(row_num=1, height=500)
+    
+    # def guess_riddle_submit(self):
+    #     '''Controls when the user clicks submit 
+    #     for guess a riddle'''
+
+    #     self.reset_textbox()
+
+    #     guess_riddle_json = self.riddler_client.guess_riddle(
+    #         self.entry_widgets['id'].get(), 
+    #         self.entry_widgets['guess'].get())
+
+    #     if 'correct' in guess_riddle_json:
+    #         if guess_riddle_json['correct'] == True:
+    #             message = 'Correct!!'
+    #         else:
+    #             message = 'Incorrect'
+    #     else:
+    #         message = guess_riddle_json
+
+    #     self.text_box.insert('end',f"{message}")    # adds message to text box
+        
+    #     self.display_text_box(row_num=4, height=50)
+
+
+    # def view_one_riddle_submit(self):
+    #     '''Controls when the user clicks submit 
+    #     for guess a riddle'''
+
+    #     self.reset_textbox()
+
+    #     one_riddle_json = self.riddler_client.one_riddle(self.entry_widgets['id'].get())
+
+    #     self.text_box.insert('end',f"{one_riddle_json}")    
+
+    #     self.display_text_box(row_num=4, height=200)
+
+    # def new_riddle_submit(self):
+    #     '''Controls when the user clicks submit 
+    #     for guess a riddle'''
+
+    #     self.reset_textbox()
+
+    #     new_riddle_json = self.riddler_client.new_riddle(
+    #         self.entry_widgets['question'].get(), 
+    #         self.entry_widgets['answer'].get())
+
+    #     if 'correct' in new_riddle_json:
+    #         if new_riddle_json['correct'] == True:
+    #             message = 'Correct!!'
+    #         else:
+    #             message = 'Incorrect'
+    #     else:
+    #         message = new_riddle_json
+
+    #     self.text_box.insert('end',f"{message}")    # adds message to text box
+        
+    #     self.display_text_box(row_num=4, height=50)
+
+  

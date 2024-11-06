@@ -1,12 +1,13 @@
-from tkinter import font
-import customtkinter
-from api_client import RiddlerInterface
+from riddle_client import RiddlerClient
 from template_gui import GUI
 
 class RiddlerGUI(GUI):
     def __init__(self):
+        # inherit all the properties and methods from the parent class
         super().__init__()
-        self.riddler_interface = RiddlerInterface()
+
+        # create the riddler client object
+        self.riddler_client = RiddlerClient()
         
         # maps each entry_widget to its placeholder text
         self.entry_dictionary = {
@@ -45,7 +46,7 @@ class RiddlerGUI(GUI):
 
         self.clear()
 
-        all_riddles_json = self.riddler_interface.all_riddles()
+        all_riddles_json = self.riddler_client.all_riddles()
         
         # loops through each riddle
         for riddle_dict in all_riddles_json:
@@ -61,7 +62,7 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        guess_riddle_json = self.riddler_interface.guess_riddle(
+        guess_riddle_json = self.riddler_client.guess_riddle(
             self.entry_widgets['id_widget'].get(), 
             self.entry_widgets['guess_widget'].get())
 
@@ -84,7 +85,7 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        one_riddle_json = self.riddler_interface.one_riddle(self.entry_widgets['id_widget'].get())
+        one_riddle_json = self.riddler_client.one_riddle(self.entry_widgets['id_widget'].get())
 
         self.text_box.insert('end',f"{one_riddle_json}")    
 
@@ -96,7 +97,7 @@ class RiddlerGUI(GUI):
 
         self.reset_textbox()
 
-        new_riddle_json = self.riddler_interface.new_riddle(
+        new_riddle_json = self.riddler_client.new_riddle(
             self.entry_widgets['question_widget'].get(), 
             self.entry_widgets['answer_widget'].get())
 

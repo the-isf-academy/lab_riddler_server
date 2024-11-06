@@ -1,6 +1,6 @@
 from tkinter import font
 import customtkinter
-from api_client import RiddlerInterface
+from riddle_client import RiddlerInterface
 
 class RiddleGUI:
     def __init__(self):
