@@ -34,11 +34,11 @@ class RiddlerGUI(GUI):
 
         # map each menu button to its entry_widgets and submit button
         self.menu_dictionary = {
-            'view all': self.view_all_riddles,
-            'guess': lambda: self.config_entry_widget(['id_widget','guess_widget'],'guess_submit'),
-            'one': lambda: self.config_entry_widget(['id_widget'],'view_one_submit'),
-            'new': lambda: self.config_entry_widget(['question_widget','answer_widget'],'new_submit'),
-            'clear': self.clear,
+            '👀 View All': self.view_all_riddles,
+            '¿ Guess ?': lambda: self.config_entry_widget(['id_widget','guess_widget'],'guess_submit'),
+            '👀 View One': lambda: self.config_entry_widget(['id_widget'],'view_one_submit'),
+            '✨ Make New': lambda: self.config_entry_widget(['question_widget','answer_widget'],'new_submit'),
+            '⌫ Clear': self.clear,
         }
 
     def view_all_riddles(self):
