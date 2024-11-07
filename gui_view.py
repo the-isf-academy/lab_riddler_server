@@ -76,5 +76,3 @@ class RiddleGUI(GUI):
         
         self.display_text_box(row_num=4, height=50)
 
-g = RiddleGUI()
-g.run()
