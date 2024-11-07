@@ -7,8 +7,8 @@ class RiddleGUI(GUI):
         # inherit all the properties and methods from the parent class
         super().__init__(app_title="Riddler",width=800, height=600)
 
-        # create the riddler client object
-        self.riddler_client = RiddleClient()
+        # create the riddle client object
+        self.riddle_client = RiddleClient()
         
 
         # maps each menu button to the method it triggers
@@ -49,7 +49,7 @@ class RiddleGUI(GUI):
         self.clear()
 
         # uses the client to make HTTP get request to /all
-        riddle_list = self.riddler_client.all_riddles()
+        riddle_list = self.riddle_client.all_riddles()
         
         # loops through each riddle and adds to textbox
         for riddle in riddle_list:
@@ -69,10 +69,9 @@ class RiddleGUI(GUI):
         guess =self.entry_widgets['guess_widget'].get()
 
         # uses the client to make HTTP post request to /guess
-        guess_riddle_message = self.riddler_client.guess_riddle(id,guess) 
+        guess_riddle_message = self.riddle_client.guess_riddle(id,guess) 
 
         # adds message to text box
         self.text_box.insert('end',f"{guess_riddle_message}")    
         
         self.display_text_box(row_num=4, height=50)
-

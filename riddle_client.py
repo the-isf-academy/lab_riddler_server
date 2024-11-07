@@ -8,7 +8,7 @@ class RiddleClient():
         self.riddle_server = 'http://sycs.student.isf.edu.hk/riddle/'
 
     def all_riddles(self):
-        '''This functions sends a GET request to riddles/all.'''
+        '''This functions sends a GET request to riddle/all.'''
 
         # stores the full address for /all
         all_riddles_address = self.riddle_server + 'all'
@@ -36,7 +36,7 @@ class RiddleClient():
 
 
     def guess_riddle(self, user_chosen_id, user_guess):
-        '''This function sends a POST request to riddles/guess.'''
+        '''This function sends a POST request to riddle/guess.'''
 
         # stores the full address for /guess
         guess_riddles_address = self.riddle_server + 'guess'
