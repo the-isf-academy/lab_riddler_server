@@ -25,7 +25,7 @@ class RiddleClient():
             parsed_riddle_list = []
 
             for riddle_dict in all_riddles_json['riddles']:
-                parsed_riddle_list.append( f"{riddle_dict['id']}# {riddle_dict['question']}")
+                parsed_riddle_list.append(f"{riddle_dict['id']}# {riddle_dict['question']}")
 
             # returns the list of riddles 
             return parsed_riddle_list
@@ -50,23 +50,24 @@ class RiddleClient():
         # makes HTTP POST request with the payload
         response = requests.post(guess_riddles_address, json=payload)
 
-        parsed_messaged = ""
 
         if response.status_code == 200:
             guess_riddle_json = response.json()
 
             # parse response JSON
             if 'riddle' in guess_riddle_json:
-                if 'correct' in guess_riddle_json['riddle']:
+                parsed_messaged = ""
+
+                if guess_riddle_json['riddle']['correct'] == True:
                     parsed_messaged = 'Correct!!!'
 
                 else:
                     parsed_messaged = 'Incorrect ;('
+                
+                return parsed_messaged
 
             else:
                 return guess_riddle_json['error']
-            
-            return parsed_messaged
 
         else:
             return f"HTTP error {response.status_code}"

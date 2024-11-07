@@ -2,7 +2,7 @@ from riddle_client import RiddleClient
 from gui_template import GUI
 import customtkinter
 
-class RiddlerGUI(GUI):
+class RiddleGUI(GUI):
     def __init__(self):
         # inherit all the properties and methods from the parent class
         super().__init__(app_title="Riddler",width=800, height=600)
@@ -75,3 +75,6 @@ class RiddlerGUI(GUI):
         self.text_box.insert('end',f"{guess_riddle_message}")    
         
         self.display_text_box(row_num=4, height=50)
+
+g = RiddleGUI()
+g.run()
