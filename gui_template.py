@@ -6,11 +6,11 @@ class GUI:
         self.app = customtkinter.CTk()
         self.app.geometry(f"{width}x{height}")
         self.app.title(app_title)
-        
-    def all_setup(self):
-        # each column uses equal spacing
         self.app.grid_columnconfigure((0,1,2,3), weight=1)
-
+        
+    def widget_setup(self):
+        '''Sets up all widgets'''
+        
         # setup menu  buttons
         self.menu_buttons = []
         self.setup_menu_buttons()
@@ -73,6 +73,8 @@ class GUI:
 
     
     def display_text_box(self, row_num, height):
+        '''Displays text box on the grid'''
+
         self.text_box.grid(row=row_num, column=0, padx=20, pady=20, sticky="ew", columnspan=5)
         self.text_box.configure(height = height) 
         self.text_box.configure(state='disabled') # sets to read-only
@@ -84,8 +86,8 @@ class GUI:
         self.text_box.delete('1.0', 'end')      # deletes all text 
         
     def clear(self):
-        '''Clear all boxes that are NOT the menu
-        from the grid'''
+        '''Clear all widgets that are 
+        NOT the menu from the grid'''
 
         self.reset_textbox()
         self.text_box.grid_forget()
@@ -101,6 +103,9 @@ class GUI:
             button.grid_forget()
 
     def config_entry_widget(self,widget_list, submit_button):
+        '''Sets up entry widgets with appropriate labels 
+        and places them on the screen'''
+
         self.clear()
 
         # Bind the entry boxes to key entry
@@ -124,9 +129,8 @@ class GUI:
                 lambda entry: self.enable_submit_guess_button(widget_list, submit_button))
 
     def enable_submit_guess_button(self, entry_widgets, submit_button):
-        '''Only activate submit button if 
-        user has entered information into
-        the entry box'''
+        '''Only activate submit button if user 
+        has entered information into the entry box'''
 
         num_filled = 0
         
@@ -138,5 +142,7 @@ class GUI:
             self.submit_buttons[submit_button].configure(state="normal")
 
     def run(self):
-        self.all_setup()
+        '''Launches the app with the widgets setup'''
+
+        self.widget_setup()
         self.app.mainloop()

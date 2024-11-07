@@ -10,39 +10,32 @@ class RiddlerGUI(GUI):
         # create the riddler client object
         self.riddler_client = RiddleClient()
         
+
+        # maps each menu button to the method it triggers
+        self.menu_dictionary = {
+            '👀 View All': lambda: self.view_all_riddles(),
+            '¿ Guess ?': lambda: self.config_entry_widget(['id_widget','guess_widget'],'guess_submit'),
+            '␡ Clear': lambda: self.clear()
+        }
+
         # maps each entry_widget to its placeholder text
         self.entry_dictionary = {
             'id_widget': "Riddle ID",
             'guess_widget': "Guess",
-            'question_widget': "Riddle Question",
-            'answer_widget': "Riddle Answer"
         }
 
-        # map each entry_widget to its label
+        # map each label_widget to its label
         self.label_dictionary = {
             'id_widget': "Enter Riddle ID",
             'guess_widget': "Enter Riddle Guess",
-            'question_widget': "Enter Riddle Question",
-            'answer_widget': "Enter Riddle Answer",
         }
 
         # maps each submit button with the method it triggers
         self.submit_button_dictionary = {
             'guess_submit': lambda: self.guess_riddle_submit(),
-            'view_one_submit': lambda: self.view_one_riddle_submit(),
-            'new_submit': lambda: self.new_riddle_submit()
         }
 
-        # map each menu button to its entry_widgets and submit button
-        self.menu_dictionary = {
-            '👀 View All': lambda: self.view_all_riddles(),
-            '¿ Guess ?': lambda: self.config_entry_widget(['id_widget','guess_widget'],'guess_submit'),
-            '👀 View One': lambda: self.config_entry_widget(['id_widget'],'view_one_submit'),
-            '✨ Make New': lambda: self.config_entry_widget(['question_widget','answer_widget'],'new_submit'),
-            '⌫ Clear': lambda: self.clear(),
-        }
-
-        # creates a text box
+        # creates a text box widget
         self.text_box = customtkinter.CTkTextbox(
             self.app,
             font=customtkinter.CTkFont(size=16),
@@ -51,16 +44,16 @@ class RiddlerGUI(GUI):
         )
 
     def view_all_riddles(self):
-        '''Controls how the user views all riddles'''
+        '''Controls when the user hits the 'views all' menu button'''
 
         self.clear()
 
-        all_riddles_json = self.riddler_client.all_riddles()
+        # uses the client to make HTTP get request to /all
+        riddle_list = self.riddler_client.all_riddles()
         
-        # loops through each riddle
-        for riddle_dict in all_riddles_json:
-            # adds riddle id and question to the text box
-            self.text_box.insert('end', f"{riddle_dict['id']}# {riddle_dict['question']}")
+        # loops through each riddle and adds to textbox
+        for riddle in riddle_list:
+            self.text_box.insert('end', riddle)
             self.text_box.insert('end', f"\n\n")
 
         self.display_text_box(row_num=1, height=500)
@@ -75,57 +68,10 @@ class RiddlerGUI(GUI):
         id = self.entry_widgets['id_widget'].get()
         guess =self.entry_widgets['guess_widget'].get()
 
-        guess_riddle_json = self.riddler_client.guess_riddle(id,guess) 
+        # uses the client to make HTTP post request to /guess
+        guess_riddle_message = self.riddler_client.guess_riddle(id,guess) 
 
-        if 'correct' in guess_riddle_json:
-            if guess_riddle_json['correct'] == True:
-                message = 'Correct!!'
-            else:
-                message = 'Incorrect'
-        else:
-            message = guess_riddle_json
-
-        self.text_box.insert('end',f"{message}")    # adds message to text box
+        # adds message to text box
+        self.text_box.insert('end',f"{guess_riddle_message}")    
         
         self.display_text_box(row_num=4, height=50)
-
-
-    def view_one_riddle_submit(self):
-        '''Controls when the user clicks submit 
-        for guess a riddle'''
-
-        self.reset_textbox()
-
-        id = self.entry_widgets['id_widget'].get()
-
-        one_riddle_json = self.riddler_client.one_riddle(id)
-
-        self.text_box.insert('end',f"{one_riddle_json}")    
-
-        self.display_text_box(row_num=4, height=200)
-
-    def new_riddle_submit(self):
-        '''Controls when the user clicks submit 
-        for guess a riddle'''
-
-        self.reset_textbox()
-
-        question = self.entry_widgets['question_widget'].get()
-        answer = self.entry_widgets['answer_widget'].get()
-
-        new_riddle_json = self.riddler_client.new_riddle(question, answer)
-
-        if 'correct' in new_riddle_json:
-            if new_riddle_json['correct'] == True:
-                message = 'Correct!!'
-            else:
-                message = 'Incorrect'
-        else:
-            message = new_riddle_json
-
-        self.text_box.insert('end',f"{message}")    # adds message to text box
-        
-        self.display_text_box(row_num=4, height=50)
-   
-gui = RiddlerGUI()
-gui.run()
