@@ -1,11 +1,15 @@
 from riddle_client import RiddleClient
 from gui_template import GUI
 import customtkinter
+from random import shuffle
 
 class RiddlerGUI(GUI):
     def __init__(self):
         # inherit all the properties and methods from the parent class
         super().__init__(app_title="Riddler",width=800, height=600)
+
+        self.app.configure(fg_color="#2e446e")
+
 
         # create the riddler client object
         self.riddler_client = RiddleClient()
@@ -40,6 +44,7 @@ class RiddlerGUI(GUI):
             '👀 View One': lambda: self.config_entry_widget(['id_widget'],'view_one_submit'),
             '✨ Make New': lambda: self.config_entry_widget(['question_widget','answer_widget'],'new_submit'),
             '⌫ Clear': lambda: self.clear(),
+            'game': lambda: self.play_game()
         }
 
         # creates a text box
@@ -48,6 +53,7 @@ class RiddlerGUI(GUI):
             font=customtkinter.CTkFont(size=16),
             text_color="black",  
             corner_radius=10, 
+            border_spacing=20
         )
 
     def view_all_riddles(self):
@@ -55,12 +61,12 @@ class RiddlerGUI(GUI):
 
         self.clear()
 
-        all_riddles_json = self.riddler_client.all_riddles()
+        parsed_riddle_list = self.riddler_client.all_riddles()
         
         # loops through each riddle
-        for riddle_dict in all_riddles_json:
+        for riddle in parsed_riddle_list:
             # adds riddle id and question to the text box
-            self.text_box.insert('end', f"{riddle_dict['id']}# {riddle_dict['question']}")
+            self.text_box.insert('end', riddle)
             self.text_box.insert('end', f"\n\n")
 
         self.display_text_box(row_num=1, height=500)
@@ -126,6 +132,20 @@ class RiddlerGUI(GUI):
         self.text_box.insert('end',f"{message}")    # adds message to text box
         
         self.display_text_box(row_num=4, height=50)
+
+    def play_game(self):
+        self.clear()
+
+        riddles_list = self.riddler_client.all_riddles()
+        shuffle(riddles_list)
+
+        for question in riddles_list:
+            question = customtkinter.CTkLabel(
+                self.app, 
+                text = question, 
+                fg_color="transparent")
+
+            question.grid(row=2, column=0, padx=20, pady=20, sticky="ew", columnspan=5)
    
 gui = RiddlerGUI()
 gui.run()

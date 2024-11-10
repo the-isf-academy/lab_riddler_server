@@ -35,7 +35,11 @@ class GUI:
                 self.app, 
                 text = title , 
                 command = method,
-                font = customtkinter.CTkFont(size=16))
+                font = customtkinter.CTkFont(size=16, family="Georgia"),
+                text_color="#363e4f",
+                fg_color="#edf3ff",
+                hover_color="#c8cedb",
+                border_spacing=10)
 
             self.menu_buttons.append(button)
 

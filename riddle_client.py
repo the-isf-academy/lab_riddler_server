@@ -21,11 +21,11 @@ class RiddleClient():
 
             # stores the response JSON
             all_riddles_json = response.json()
-
+            
             parsed_riddle_list = []
 
             for riddle_dict in all_riddles_json['riddles']:
-                parsed_riddle_list.append(f"{riddle_dict['id']}# {riddle_dict['question']}")
+                parsed_riddle_list.append(riddle_dict)
 
             # returns the list of riddles 
             return parsed_riddle_list
@@ -119,3 +119,5 @@ class RiddleClient():
 
         else:
             return f"HTTP error {response.status_code}"
+        
+
